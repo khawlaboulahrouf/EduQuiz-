@@ -7,6 +7,17 @@ require_once '../../../config/database.php';
 $db = new Database();
 $conn = $db->connect();
 
+if(!isset($_SESSION['current_index'])){
+    $_SESSION['current_index'] = 0;
+}
+
+ if(isset($_POST['next'])){
+        $_SESSION['current_index']++;
+    }
+
+    if(isset($_POST['back'])){
+        $_SESSION['current_index']--;
+    }
 // check session
 if(!isset($_SESSION['quiz'])){
     header("Location: enterCode.php");
@@ -35,12 +46,17 @@ foreach($questions as &$question){
 }
 
 // check if questions exist
-if(count($questions) > 0){
-    $currentQuestion = $questions[0];
-} else {
-    echo "No questions found for this quiz";
-    exit();
+$index = $_SESSION['current_index'];
+
+if($index < 0){
+    $index = 0;
 }
+
+if($index >= count($questions)){
+    $index = count($questions) - 1;
+}
+
+$currentQuestion = $questions[$index];
 
 ?>
 
@@ -94,7 +110,6 @@ if(count($questions) > 0){
 
                 <!-- Back -->
                 <button 
-                    id="back"
                     type="submit"
                     name="back"
                     class="flex items-center gap-2 px-6 py-3 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold transition"
@@ -105,7 +120,6 @@ if(count($questions) > 0){
 
                 <!-- Next -->
                 <button 
-                    id="next"
                     type="submit"
                     name="next"
                     class="flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg transition"
