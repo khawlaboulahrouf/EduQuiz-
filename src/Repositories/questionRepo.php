@@ -15,6 +15,12 @@ class UserRepository{
             Password_hash($user->getPassword(),PASSWORD_DEFAULT),
         ]);
     }
+    public function findByEmail($email){
+        $sql = "SELECT * FROM users  WHERE email = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$email]);
+        $data = $stmt->fetch();
+    }
 } 
 
 
