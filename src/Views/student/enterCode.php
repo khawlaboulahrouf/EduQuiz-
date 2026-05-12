@@ -1,20 +1,50 @@
 <?php
+
 session_start();
 
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
+require_once '../../../config/database.php';
+
+$db = new Database();
+$conn = $db->connect();
+
+if(isset($_POST["submit"])){
 
     $code = trim($_POST['code']);
 
     if(empty($code)){
+
+        $_SESSION['error'] = "Please enter quiz code";
+
         header('Location: enterCode.php');
         exit();
     }
 
-    $_SESSION['code'] = $code;
+    // check database
+    $sql = "SELECT * FROM quizzes WHERE code = :code LIMIT 1";
 
-    header('Location: startQuiz.php');
-    exit();
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':code', $code);
+    $stmt->execute();
+
+    $quiz = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if($quiz){
+
+        // store quiz only
+        $_SESSION['quiz'] = $quiz;
+
+        header('Location: startQuiz.php');
+        exit();
+
+    } else {
+
+        $_SESSION['error'] = "Code incorrect";
+
+        header('Location: enterCode.php');
+        exit();
+    }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -80,6 +110,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
             <!-- Button -->
             <button 
+                name="submit"
                 type="submit"
                 class="w-full bg-indigo-600 hover:bg-indigo-700 transition-all duration-300 text-white font-bold py-3 rounded-xl shadow-lg hover:shadow-indigo-300"
             >
