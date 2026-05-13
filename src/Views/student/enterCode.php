@@ -92,6 +92,15 @@ if(isset($_POST["submit"])){
                     Quiz Code
                 </label>
 
+                   <?php if(isset($_SESSION['error'])): ?>
+                    <div 
+                        id="error-message"
+                        class="mb-6 p-4 rounded-xl bg-red-100 border border-red-300 text-red-700 font-semibold text-center transition-all duration-300">
+                        <i class="fa-solid fa-circle-exclamation mr-2"></i>
+                        <?= $_SESSION['error'] ?>
+                    </div>
+                    <?php unset($_SESSION['error']); ?>
+                    <?php endif; ?>
                 <div class="relative">
 
                     <span class="absolute left-4 top-3.5 text-gray-400">
@@ -99,6 +108,7 @@ if(isset($_POST["submit"])){
                     </span>
 
                     <input 
+                        id="quiz-code"
                         name="code"
                         type="text"
                         placeholder="Enter Quiz Code..."
@@ -121,6 +131,26 @@ if(isset($_POST["submit"])){
         </form>
 
     </div>
+    <script>
 
+    const input = document.getElementById('quiz-code');
+    const errorMessage = document.getElementById('error-message');
+
+    if(input && errorMessage){
+
+        input.addEventListener('input', () => {
+
+            errorMessage.style.opacity = '0';
+            errorMessage.style.transform = 'translateY(-10px)';
+
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 300);
+
+        });
+
+    }
+
+</script>
 </body>
 </html>
