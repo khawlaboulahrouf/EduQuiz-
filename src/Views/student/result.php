@@ -32,7 +32,7 @@ session_destroy();
     <div class="bg-white shadow-2xl rounded-3xl p-10 w-full max-w-md text-center">
 
         <h1 class="text-4xl font-extrabold text-indigo-600 mb-6">
-            Quiz Finished 🎉
+            Quiz Finished 
         </h1>
 
         <div class="mb-6">

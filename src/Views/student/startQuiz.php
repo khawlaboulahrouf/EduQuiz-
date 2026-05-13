@@ -8,7 +8,7 @@ $db = new Database();
 $conn = $db->connect();
 
 /* =========================
-   INIT SESSION VALUES
+   INIT SESSION
 ========================= */
 
 if(!isset($_SESSION['correct'])){
@@ -21,6 +21,14 @@ if(!isset($_SESSION['incorrect'])){
 
 if(!isset($_SESSION['current_index'])){
     $_SESSION['current_index'] = 0;
+}
+
+if(!isset($_SESSION['answered'])){
+    $_SESSION['answered'] = false;
+}
+
+if(!isset($_SESSION['selected_answer'])){
+    $_SESSION['selected_answer'] = null;
 }
 
 /* =========================
@@ -46,7 +54,7 @@ $stmt->execute();
 $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 /* =========================
-   ADD ANSWERS TO QUESTIONS
+   GET ANSWERS
 ========================= */
 
 foreach($questions as &$question){
@@ -60,60 +68,94 @@ foreach($questions as &$question){
 }
 
 /* =========================
-   NEXT BUTTON LOGIC
-========================= */
-
-if(isset($_POST['next'])){
-
-    if(isset($_POST['answer'])){
-
-        $answer_id = $_POST['answer'];
-
-        $sql = "SELECT * FROM answers WHERE id = :id";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':id', $answer_id);
-        $stmt->execute();
-
-        $answer = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if($answer && $answer['is_correct'] == 1){
-            $_SESSION['correct']++;
-        }else{
-            $_SESSION['incorrect']++;
-        }
-    }
-
-    $_SESSION['current_index']++;
-
-    if($_SESSION['current_index'] >= count($questions)){
-        header("Location: result.php");
-        exit();
-    }
-}
-
-/* =========================
-   BACK BUTTON LOGIC
-========================= */
-
-if(isset($_POST['back'])){
-    $_SESSION['current_index']--;
-
-    if($_SESSION['current_index'] < 0){
-        $_SESSION['current_index'] = 0;
-    }
-}
-
-/* =========================
    CURRENT QUESTION
 ========================= */
 
 $index = $_SESSION['current_index'];
+
+if($index < 0){
+    $index = 0;
+}
 
 if($index >= count($questions)){
     $index = count($questions) - 1;
 }
 
 $currentQuestion = $questions[$index];
+
+/* =========================
+   ANSWER LOGIC
+========================= */
+
+if(
+    isset($_POST['answer']) &&
+    $_SESSION['answered'] == false
+){
+
+    $selectedAnswer = $_POST['answer'];
+
+    $_SESSION['selected_answer'] = $selectedAnswer;
+    $_SESSION['answered'] = true;
+
+    $sql = "SELECT * FROM answers WHERE id = :id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':id', $selectedAnswer);
+    $stmt->execute();
+
+    $selected = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if($selected){
+
+        if($selected['is_correct'] == 1){
+
+            $_SESSION['correct']++;
+
+        }else{
+
+            $_SESSION['incorrect']++;
+        }
+    }
+}
+
+/* =========================
+   NEXT BUTTON
+========================= */
+
+if(isset($_POST['next'])){
+
+    $_SESSION['current_index']++;
+
+    $_SESSION['answered'] = false;
+    $_SESSION['selected_answer'] = null;
+
+    if($_SESSION['current_index'] >= count($questions)){
+
+        header("Location: result.php");
+        exit();
+    }
+
+    header("Location: startQuiz.php");
+    exit();
+}
+
+/* =========================
+   BACK BUTTON
+========================= */
+
+if(isset($_POST['back'])){
+
+    $_SESSION['current_index']--;
+
+    if($_SESSION['current_index'] < 0){
+        $_SESSION['current_index'] = 0;
+    }
+
+    $_SESSION['answered'] = false;
+    $_SESSION['selected_answer'] = null;
+
+    header("Location: startQuiz.php");
+    exit();
+}
 
 ?>
 
@@ -138,24 +180,29 @@ $currentQuestion = $questions[$index];
     <div class="flex items-center justify-between mb-8">
 
         <div>
-            <p class="text-sm text-gray-500 font-medium">Question Progress</p>
+            <p class="text-sm text-gray-500 font-medium">
+                Question Progress
+            </p>
 
             <h2 class="text-2xl font-bold text-indigo-600">
                 <?= $index + 1 ?>
+
                 <span class="text-gray-400 text-xl font-semibold">
                     / <?= count($questions) ?>
                 </span>
             </h2>
         </div>
 
-        <!-- PROGRESS BAR -->
+        <!-- PROGRESS -->
         <div class="w-44">
 
             <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+
                 <div 
                     class="bg-indigo-600 h-3 rounded-full transition-all duration-500"
                     style="width: <?= (($index + 1) / count($questions)) * 100 ?>%"
                 ></div>
+
             </div>
 
             <p class="text-xs text-gray-500 mt-2 text-right font-semibold">
@@ -171,18 +218,43 @@ $currentQuestion = $questions[$index];
         <?= htmlspecialchars($currentQuestion['question']) ?>
     </h1>
 
-    <!-- ANSWERS -->
+    <!-- FORM -->
     <form method="POST" class="space-y-4">
 
         <?php foreach($currentQuestion['answers'] as $answer): ?>
 
-            <label class="flex items-center gap-4 p-5 border border-gray-200 rounded-2xl cursor-pointer hover:bg-indigo-50 hover:border-indigo-400 transition-all duration-300 shadow-sm hover:shadow-md">
+            <?php
+
+                $bgClass = "border-gray-200 hover:bg-indigo-50 hover:border-indigo-400";
+
+                // correct answer => green
+                if(
+                    $_SESSION['answered'] &&
+                    $answer['is_correct'] == 1
+                ){
+                    $bgClass = "bg-green-100 border-green-500";
+                }
+
+                // selected wrong answer => red
+                if(
+                    $_SESSION['answered'] &&
+                    $_SESSION['selected_answer'] == $answer['id'] &&
+                    $answer['is_correct'] == 0
+                ){
+                    $bgClass = "bg-red-100 border-red-500";
+                }
+
+            ?>
+
+            <label class="flex items-center gap-4 p-5 border rounded-2xl cursor-pointer transition-all duration-300 shadow-sm hover:shadow-md <?= $bgClass ?>">
 
                 <input 
                     type="radio" 
                     name="answer" 
                     value="<?= $answer['id'] ?>"
                     class="w-5 h-5 text-indigo-600"
+                    onchange="this.form.submit()"
+                    <?= $_SESSION['answered'] ? 'disabled' : '' ?>
                 >
 
                 <span class="text-gray-700 font-semibold text-lg">
@@ -196,6 +268,7 @@ $currentQuestion = $questions[$index];
         <!-- BUTTONS -->
         <div class="flex justify-between mt-10">
 
+            <!-- BACK -->
             <button 
                 type="submit"
                 name="back"
@@ -205,14 +278,19 @@ $currentQuestion = $questions[$index];
                 Back
             </button>
 
-            <button 
-                type="submit"
-                name="next"
-                class="flex items-center gap-2 px-7 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg hover:scale-105 transition-all duration-300"
-            >
-                Next
-                <i class="fa-solid fa-arrow-right"></i>
-            </button>
+            <?php if($_SESSION['answered']): ?>
+
+                <!-- NEXT -->
+                <button 
+                    type="submit"
+                    name="next"
+                    class="flex items-center gap-2 px-7 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg hover:scale-105 transition-all duration-300"
+                >
+                    Next
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+            <?php endif; ?>
 
         </div>
 
