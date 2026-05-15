@@ -8,7 +8,7 @@ $repo = new UserRepository(Database::getConnection());
 if($_SERVER['REQUEST_METHOD']==='POST'){
     $user = new User(
         null,
-        $_POST['name'],
+        $_POST['name'],  
         $_POST['email'],
         $_POST['password'],
         $_POST['role']
