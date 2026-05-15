@@ -26,7 +26,7 @@ if(isset($_POST["submit"])){
 
     if($quiz){
     $_SESSION['student_name'] = $_POST['student_name'];
-    
+
         $_SESSION['quiz'] = $quiz;
 
         $_SESSION['correct'] = 0;
@@ -101,24 +101,30 @@ class="bg-red-100 border border-red-300 text-red-700 p-4 rounded-xl text-center"
 
 <div class="relative">
 
-<span class="absolute left-4 top-3.5 text-gray-400">
-<i class="fa-solid fa-key"></i>
-</span>
+    <!-- Name Input -->
+    <input
+    type="text"
+    name="student_name"
+    placeholder="Enter Your Name"
+    class="w-full mb-4 px-5 py-3 rounded-xl border border-gray-300 focus:ring-4 focus:ring-indigo-200 focus:outline-none"
+    >
 
-<input
-type="text"
-name="student_name"
-placeholder="Enter Your Name"
-class="w-full mb-4 px-4 py-3 rounded-xl border border-gray-300 focus:ring-4 focus:ring-indigo-200 focus:outline-none"
->
+    <!-- Code Input -->
+    <div class="relative">
 
-<input
-id="quiz-code"
-type="text"
-name="code"
-placeholder="Enter Quiz Code..."
-class="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-4 focus:ring-indigo-200 focus:outline-none"
->
+        <span class="absolute left-1 top-3.5 text-gray-400">
+            <i class="fa-solid fa-key"></i>
+        </span>
+
+        <input
+        id="quiz-code"
+        type="text"
+        name="code"
+        placeholder="Enter Quiz Code..."
+        class="w-full pl-6 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-4 focus:ring-indigo-200 focus:outline-none"
+        >
+
+    </div>
 
 </div>
 

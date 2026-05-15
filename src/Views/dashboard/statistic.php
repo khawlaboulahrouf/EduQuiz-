@@ -28,7 +28,19 @@ $results = $quizObj->getResults();
 <body class="bg-gray-100 min-h-screen p-8">
 
 <div class="max-w-7xl mx-auto">
+    <!-- Back Button -->
+<div class="mb-6">
 
+    <a
+        href="../student/enterCode.php"
+        class="inline-flex items-center gap-2 bg-white hover:bg-indigo-50 text-indigo-600 border border-indigo-200 px-5 py-3 rounded-2xl shadow-md transition duration-300 font-semibold"
+    >
+
+        ← Back To Quiz
+
+    </a>
+
+</div>
     <!-- Header -->
     <div class="flex justify-between items-center mb-10">
 
