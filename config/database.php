@@ -1,10 +1,10 @@
 <?php
 class Database {
 
-    private static $host = "localhost";
-    private static $dbname = "EduQuiz";
-    private static $username = "root";
-    private static $password = "";
+    private $host = "localhost";
+    private $dbname = "eduquiz";
+    private $username = "root";
+    private $password = "";
 
     public static function getConnection() {
         try {
