@@ -3,7 +3,7 @@ require_once __DIR__ . '/../../../config/Database.php';
 require_once __DIR__ . '/../../Repositories/userRepo.php';
 require_once __DIR__ . '/../../Entities/User.php';
 require_once __DIR__ . '/../../Services/authentification.php';
-$repo = new UserRepository(Database::getConnection());
+$repo = new UserRepository(Database::getConnection());   
 $auth = new Auth($repo);
 
 if($_SERVER['REQUEST_METHOD']==='POST'){
