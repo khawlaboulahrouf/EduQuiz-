@@ -11,7 +11,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         $_POST['name'],  
         $_POST['email'],
         $_POST['password'],
-        $_POST['role']
+        $_POST['role']    
     );
     $repo->create($user);
     header("Location: login.php");
