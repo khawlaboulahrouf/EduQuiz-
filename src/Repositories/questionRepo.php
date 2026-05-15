@@ -18,4 +18,20 @@ class UserRepository{
         ]);
     }
 
+    public function findByEmail($email){
+        $sql = "SELECT * FROM users WHERE email = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$email]);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if($data){
+            return new User(
+                $data['id'],
+                $data['name'],
+                $data['email'],
+                $data['password']
+            );
+        }
+        return null;
+    }
 }
