@@ -36,6 +36,10 @@ class Result
         $this->id        = $id;
     }
 
+
+
+    
+
     // ---- Getters ----
     public function getId():          int    { return $this->id;          }
     public function getUserId():      int    { return $this->userId;      }
