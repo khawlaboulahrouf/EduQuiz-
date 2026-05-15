@@ -13,7 +13,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         }else{
             header("Location: /EduQuiz-/student/enterCode.php");
         exit;
-        }
+        }  
         exit;
     }
     header('Location: register.php');
