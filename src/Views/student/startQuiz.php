@@ -17,11 +17,20 @@ if(!isset($_SESSION['quiz'])){
 
 $quiz_id = $_SESSION['quiz']['id'];
 
+$student_name = $_SESSION['student_name'];
+
 $questions = $quizObj->getQuestions($quiz_id);
 
 $index = $_SESSION['current_index'];
 
+// finish check
+if($index >= count($questions)){
+    header("Location: result.php");
+    exit();
+}
+
 $currentQuestion = $questions[$index];
+
 
 // answer logic
 if(
@@ -50,6 +59,7 @@ if(
     }
 }
 
+
 // next
 if(isset($_POST['next'])){
 
@@ -59,7 +69,15 @@ if(isset($_POST['next'])){
 
     $_SESSION['selected_answer'] = null;
 
+    // END QUIZ
     if($_SESSION['current_index'] >= count($questions)){
+
+        $quizObj->saveResult(
+            $student_name,
+            $quiz_id,
+            $_SESSION['correct'],
+            count($questions)
+        );
 
         header("Location: result.php");
         exit();
@@ -68,6 +86,7 @@ if(isset($_POST['next'])){
     header("Location: startQuiz.php");
     exit();
 }
+
 
 // back
 if(isset($_POST['back'])){
@@ -87,6 +106,7 @@ if(isset($_POST['back'])){
 }
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -96,70 +116,77 @@ if(isset($_POST['back'])){
 
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
 
-    <div class="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8">
+<div class="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8">
 
-        <!-- Header -->
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-800">
-                Quiz Application
-            </h1>
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
 
-            <span class="bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold">
-                Question <?php echo $index + 1; ?>
-            </span>
-        </div>
+        <h1 class="text-2xl font-bold text-gray-800">
+            Quiz Application
+        </h1>
 
-        <!-- Question -->
-        <div class="mb-8">
-            <h2 class="text-xl font-semibold text-gray-700 leading-relaxed">
-                <?php echo $currentQuestion['question']; ?>
-            </h2>
-        </div>
-
-        <!-- Answers -->
-        <form method="POST" class="space-y-4">
-
-            <?php foreach($currentQuestion['answers'] as $answer): ?>
-
-                <button
-                    type="submit"
-                    name="answer"
-                    value="<?php echo $answer['id']; ?>"
-                    class="w-full text-left bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-400 transition duration-300 p-4 rounded-xl shadow-sm"
-                >
-                    <span class="text-gray-700 font-medium">
-                        <?php echo $answer['answer']; ?>
-                    </span>
-                </button>
-
-            <?php endforeach; ?>
-
-            <!-- Navigation Buttons -->
-            <div class="flex justify-between items-center pt-6">
-
-                <button
-                    type="submit"
-                    name="back"
-                    class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-3 rounded-xl transition duration-300"
-                >
-                    ← Back
-                </button>
-
-                <button
-                    type="submit"
-                    name="next"
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl shadow-md transition duration-300"
-                >
-                    Next →
-                </button>
-
-            </div>
-
-        </form>
+        <span class="bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold">
+            Question <?php echo $index + 1; ?>
+        </span>
 
     </div>
+
+    <!-- Question -->
+    <div class="mb-8">
+
+        <h2 class="text-xl font-semibold text-gray-700 leading-relaxed">
+            <?php echo $currentQuestion['question']; ?>
+        </h2>
+
+    </div>
+
+    <!-- Answers -->
+    <form method="POST" class="space-y-4">
+
+        <?php foreach($currentQuestion['answers'] as $answer): ?>
+
+            <button
+                type="submit"
+                name="answer"
+                value="<?php echo $answer['id']; ?>"
+                class="w-full text-left bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-400 transition duration-300 p-4 rounded-xl shadow-sm"
+            >
+
+                <span class="text-gray-700 font-medium">
+                    <?php echo $answer['answer']; ?>
+                </span>
+
+            </button>
+
+        <?php endforeach; ?>
+
+        <!-- Navigation -->
+        <div class="flex justify-between items-center pt-6">
+
+            <button
+                type="submit"
+                name="back"
+                class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-3 rounded-xl"
+            >
+                ← Back
+            </button>
+
+            <button
+                type="submit"
+                name="next"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl"
+            >
+                Next →
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
 
 </body>
 </html>

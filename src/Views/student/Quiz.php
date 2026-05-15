@@ -8,6 +8,39 @@ class Quiz {
 
         $this->conn = $db;
     }
+    // save result
+public function saveResult($student_name, $quiz_id, $score, $total_questions){
+
+    $sql = "INSERT INTO results
+    (student_name, quiz_id, score, total_questions)
+    VALUES
+    (:student_name, :quiz_id, :score, :total_questions)";
+
+    $stmt = $this->conn->prepare($sql);
+
+    $stmt->bindParam(':student_name', $student_name);
+    $stmt->bindParam(':quiz_id', $quiz_id);
+    $stmt->bindParam(':score', $score);
+    $stmt->bindParam(':total_questions', $total_questions);
+
+    return $stmt->execute();
+}
+
+// get results
+public function getResults(){
+
+    $sql = "
+        SELECT *
+        FROM results
+        ORDER BY created_at DESC
+    ";
+
+    $stmt = $this->conn->prepare($sql);
+
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
     // get quiz by code
     public function getQuizByCode($code){

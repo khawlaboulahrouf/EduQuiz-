@@ -25,7 +25,8 @@ if(isset($_POST["submit"])){
     $quiz = $quizObj->getQuizByCode($code);
 
     if($quiz){
-
+    $_SESSION['student_name'] = $_POST['student_name'];
+    
         $_SESSION['quiz'] = $quiz;
 
         $_SESSION['correct'] = 0;
@@ -103,6 +104,13 @@ class="bg-red-100 border border-red-300 text-red-700 p-4 rounded-xl text-center"
 <span class="absolute left-4 top-3.5 text-gray-400">
 <i class="fa-solid fa-key"></i>
 </span>
+
+<input
+type="text"
+name="student_name"
+placeholder="Enter Your Name"
+class="w-full mb-4 px-4 py-3 rounded-xl border border-gray-300 focus:ring-4 focus:ring-indigo-200 focus:outline-none"
+>
 
 <input
 id="quiz-code"
