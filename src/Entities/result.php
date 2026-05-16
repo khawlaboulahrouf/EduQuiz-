@@ -35,7 +35,6 @@ class Result
         $this->createdAt = $createdAt;
         $this->id        = $id;
     }
-
     // ---- Getters ----
     public function getId():          int    { return $this->id;          }
     public function getUserId():      int    { return $this->userId;      }
@@ -45,6 +44,9 @@ class Result
     public function getStudentName(): string { return $this->studentName; }
     public function getQuizTitle():   string { return $this->quizTitle;   }
 
+
+
+    
     // ---- Setters (pour l'hydratation depuis JOIN) ----
     public function setStudentName(string $name):  void { $this->studentName = $name;  }
     public function setQuizTitle(string $title):   void { $this->quizTitle   = $title; }
