@@ -6,21 +6,20 @@ class Database {
     private $username = "root";
     private $password = "";
 
-    public static function getConnection() {
+    public $conn;
+    public function connect() {
+        $this->conn = null;
         try {
-            $pdo = new PDO(
-                "mysql:host=" . self::$host . ";dbname=" . self::$dbname . ";charset=utf8",
-                self::$username,
-                self::$password
+            $this->conn = new PDO(
+                "mysql:host={$this->host};dbname={$this->dbname};charset=utf8",
+                $this->username,
+                $this->password
             );
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            return $pdo;
-
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch(PDOException $e) {
             die("Connection error: " . $e->getMessage());
         }
+        return $this->conn;
     }
 }
 ?>
-
- 
