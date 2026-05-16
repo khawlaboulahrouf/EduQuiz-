@@ -9,8 +9,8 @@ $auth = new Auth($repo);
 
 if($_SERVER['REQUEST_METHOD']==='POST'){
     if($auth->login($_POST['email'],$_POST['password'])){
-        if($_SESSION['user']['role'] === 'prof'){
-            header("Location: prof_dashboard.php");  
+        if($_SESSION['user']['role'] === 'formateur'){
+            header("Location: ../dashboard/dashboard.php");  
         }else{
             header("Location: /EduQuiz-/src/Views/student/enterCode.php");
         exit;
