@@ -3,7 +3,8 @@
 require_once __DIR__ . '/../../../config/Database.php';
 require_once __DIR__ . '/../../Repositories/userRepo.php';
 require_once __DIR__ . '/../../Entities/user.php';
-$repo = new UserRepository(Database::getConnection());
+$db = new Database();
+$repo = new UserRepository($db->connect()); 
 
 if($_SERVER['REQUEST_METHOD']==='POST'){
     $user = new User(

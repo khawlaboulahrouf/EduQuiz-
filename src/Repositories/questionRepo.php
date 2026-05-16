@@ -26,11 +26,12 @@ class UserRepository{
 
         if($data){
             return new User(
-                $data['id'],
-                $data['name'],
-                $data['email'],
-                $data['password']
-            );
+        $data['id'],
+        $data['name'],
+        $data['email'],
+        $data['password'],
+        $data['role']
+    );
         }
         return null;
     }
