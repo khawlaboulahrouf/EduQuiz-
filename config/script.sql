@@ -64,6 +64,49 @@ INSERT INTO answers (answer, is_correct, question_id) VALUES
 ('Simple Query Language', FALSE, 1),
 ('Standard Question List', FALSE, 1);
 
+-- QUESTION 1
+INSERT INTO questions (question, quiz_id) VALUES ('What does PHP stand for ?', 1);
+INSERT INTO answers (answer, is_correct, question_id) VALUES 
+('Personal Home Page', 1, 1),
+('Private Hosting Program', 0, 1),
+('Public Hypertext Processor', 0, 1);
+
+-- QUESTION 2
+INSERT INTO questions (question, quiz_id) VALUES ('Which language is used for styling web pages ?', 1);
+INSERT INTO answers (answer, is_correct, question_id) VALUES 
+('JavaScript', 0, 2),
+('CSS', 1, 2),
+('Python', 0, 2);
+
+-- QUESTION 3
+
+-- QUESTION 4
+INSERT INTO questions (question, quiz_id) VALUES ('Which of these is a database system ?', 1);
+INSERT INTO answers (answer, is_correct, question_id) VALUES 
+('MySQL', 1, 4),
+('Laravel', 0, 4),
+('HTML', 0, 4);
+
+-- QUESTION 5
+INSERT INTO questions (question, quiz_id) VALUES ('What is the correct way to declare a variable in PHP ?', 1);
+INSERT INTO answers (answer, is_correct, question_id) VALUES 
+('$variable', 1, 5),
+('var variable', 0, 5),
+('let variable', 0, 5);
+
+-- QUESTION 6
+INSERT INTO questions (question, quiz_id) VALUES ('Which one is a frontend technology ?', 1);
+INSERT INTO answers (answer, is_correct, question_id) VALUES 
+('Node.js', 0, 6),
+('React', 1, 6),
+('PHP', 0, 6);
+
+-- QUESTION 7
+INSERT INTO questions (question, quiz_id) VALUES ('What is used to connect PHP with database ?', 1);
+INSERT INTO answers (answer, is_correct, question_id) VALUES 
+('PDO', 1, 7),
+('HTML', 0, 7),
+('CSS', 0, 7);
 INSERT INTO answers (answer, is_correct, question_id) VALUES 
 ('SELECT', FALSE, 2),
 ('INSERT', TRUE, 2),
