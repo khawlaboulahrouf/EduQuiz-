@@ -117,3 +117,45 @@ INSERT INTO results (user_id, quiz_id, score) VALUES
 
 INSERT INTO results (user_id, quiz_id, score) VALUES 
 (3, 1, 50);
+
+
+
+-- ============================================================
+--  TABLE SUPPLÉMENTAIRE : student_answers
+--  Nécessaire pour l'Axe 4 (afficher la correction)
+--  À ajouter au script.sql du groupe
+--
+--  Cette table enregistre quelle réponse chaque étudiant
+--  a choisie pour chaque question d'un quiz.
+-- ============================================================
+
+USE eduQuiz;
+
+CREATE TABLE IF NOT EXISTS student_answers (
+    id          INT PRIMARY KEY AUTO_INCREMENT,
+    user_id     INT NOT NULL,
+    quiz_id     INT NOT NULL,
+    question_id INT NOT NULL,
+    answer_id   INT NOT NULL,
+    answered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id)     REFERENCES users(id),
+    FOREIGN KEY (quiz_id)     REFERENCES quizzes(id),
+    FOREIGN KEY (question_id) REFERENCES questions(id),
+    FOREIGN KEY (answer_id)   REFERENCES answers(id),
+
+    UNIQUE KEY unique_answer (user_id, quiz_id, question_id)
+);
+
+-- ============================================================
+--  Exemple de données de test (cohérent avec script.sql)
+--  Alice (id=2) a répondu au quiz SQL-2026 (id=1)
+--    Question 1 → réponse 1 (correcte : "Structured Query Language")
+--    Question 2 → réponse 5 (correcte : "INSERT")
+-- ============================================================
+
+INSERT INTO student_answers (user_id, quiz_id, question_id, answer_id) VALUES
+(2, 1, 1, 1),    
+(2, 1, 2, 5),  
+(3, 1, 1, 2),    
+(3, 1, 2, 5);   
