@@ -1,38 +1,51 @@
 <?php
-require_once 'user.php';
 
-class UserRepository{
-    private PDO $pdo;
+require_once __DIR__ . '/../../config/Database.php';
 
-    public function __construct(PDO $pdo){
-        $this->pdo = $pdo;
+class QuestionRepository
+{
+
+    private PDO $conn;
+
+    public function __construct()
+    {
+        $this->conn = (new Database())->connect();
     }
 
-    public function create(User $user){
-        $sql = "INSERT INTO users(name,email,password) VALUES(?,?,?)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([
-            $user->getName(),
-            $user->getEmail(),
-            password_hash($user->getPassword(),PASSWORD_DEFAULT),
-        ]);
+    public function create($quizId, $question)
+    {
+
+        $stmt = $this->conn->prepare(
+            "INSERT INTO questions(question, quiz_id) VALUES(?, ?)"
+        );
+
+        $stmt->execute([$question, $quizId]);
+
+        return $this->conn->lastInsertId();
     }
 
-    public function findByEmail($email){
-        $sql = "SELECT * FROM users WHERE email = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$email]);
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+    public function update($id, $question)
+    {
 
-        if($data){
-            return new User(
-        $data['id'],
-        $data['name'],
-        $data['email'],
-        $data['password'],
-        $data['role']
-    );
-        }
-        return null;
+        $stmt = $this->conn->prepare(
+            "UPDATE questions SET question = ? WHERE id = ?"
+        );
+
+        return $stmt->execute([$question, $id]);
+    }
+
+    public function delete($id)
+    {
+        $sql = "DELETE FROM questions WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([$id]);
+    }
+    public function getByQuiz($quizId)
+    {
+        $sql = "SELECT * FROM questions WHERE quiz_id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$quizId]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

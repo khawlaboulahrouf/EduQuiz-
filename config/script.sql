@@ -1,6 +1,4 @@
-CREATE DATABASE eduQuiz ;
 
-use eduQuiz;
 
 CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -9,7 +7,6 @@ CREATE TABLE users (
     password VARCHAR(255),
     role ENUM('formateur', 'etudiant')
 );
-
 CREATE TABLE quizzes (
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255),
