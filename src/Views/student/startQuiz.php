@@ -79,7 +79,7 @@ if(isset($_POST['next'])){
             count($questions)
         );
 
-        header("Location: result.php");
+        header("Location: EduQuiz-/src/Views/dashboard/result.php");
         exit();
     }
 

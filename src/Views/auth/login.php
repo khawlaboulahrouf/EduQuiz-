@@ -12,7 +12,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         if($_SESSION['user']['role'] === 'prof'){
             header("Location: prof_dashboard.php");  
         }else{
-            header("Location: /EduQuiz-/student/enterCode.php");
+            header("Location: /EduQuiz-/src/Views/student/enterCode.php");
         exit;
         }  
         exit;

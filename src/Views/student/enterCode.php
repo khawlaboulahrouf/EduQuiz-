@@ -5,6 +5,11 @@ session_start();
 require_once '../../../config/Database.php';
 require_once 'Quiz.php';
 
+if(!isset($_SESSION['user'])){
+    header("Location:http://localhost/EduQuiz-/src/Views/auth/login.php");
+    exit();
+}
+
 $db = new Database();
 $conn = $db->connect();
 
